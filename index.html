@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>全球能力排名实验</title>
+    <script>
+        // 存储用户数据（实际应用需替换为数据库）
+        let submissions = [];
+        
+        function submitAbility() {
+            const username = document.getElementById('username').value;
+            const abilityValue = document.getElementById('ability').value;
+            const model = document.getElementById('model').value;
+            
+            // 生成能力哈希（模拟加密）
+            const hash = "h_" + Math.random().toString(36).substr(2, 9);
+            
+            // 记录数据
+            submissions.push({
+                username,
+                abilityValue,
+                model,
+                hash,
+                timestamp: new Date().toISOString()
+            });
+            
+            // 更新排行榜
+            updateRanking();
+            alert("提交成功！您的验证码: " + hash);
+        }
+        
+        function updateRanking() {
+            const rankList = document.getElementById('ranking');
+            rankList.innerHTML = '<h3>实时排名 TOP10</h3>';
+            
+            // 按能力值排序
+            const sorted = [...submissions].sort((a,b) => b.abilityValue - a.abilityValue).slice(0,10);
+            
+            sorted.forEach((user, index) => {
+                rankList.innerHTML += `
+                <div class="user">
+                    ${index+1}. ${user.username} 
+                    <span>${user.abilityValue}分</span>
+                    <small>(${user.model} | ${user.hash})</small>
+                </div>`;
+            });
+        }
+    </script>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: 20px auto; }
+        .user { padding: 10px; border-bottom: 1px solid #eee; }
+        .user span { float: right; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🔮 全球能力值排名实验</h1>
+    <p>用你的AI模型测试能力，争夺全球排名！</p>
+    
+    <div>
+        <label>昵称：</label>
+        <input type="text" id="username" placeholder="你的昵称" required>
+    </div>
+    <div>
+        <label>能力值（0-100）：</label>
+        <input type="number" id="ability" min="0" max="100" required>
+    </div>
+    <div>
+        <label>所用AI模型：</label>
+        <select id="model">
+            <option>GPT-4</option>
+            <option>Claude</option>
+            <option>Qwen本地版</option>
+            <option>其他模型</option>
+        </select>
+    </div>
+    <button onclick="submitAbility()">生成加密分数并提交</button>
+    
+    <div id="ranking" style="margin-top:30px">
+        <h3>实时排名 TOP10</h3>
+        <p>提交后刷新页面查看排名</p>
+    </div>
+    
+    <div style="margin-top:50px; color:#666; font-size:0.8em">
+        <p>💡 如何获取能力值？</p>
+        <ol>
+            <li>在LM Studio等工具加载AI模型</li>
+            <li>运行历史/投资等测评问题</li>
+            <li>将最终得分填入上方表单</li>
+        </ol>
+    </div>
+</body>
+</html>
